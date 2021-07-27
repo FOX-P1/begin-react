@@ -1,39 +1,48 @@
-import React from "react";
+import React, { useEffect } from "react";
 
-function User({ user }) {
+const User = React.memo(function User({ user, onRemove, onToggle }) {
+    useEffect(() => {
+        console.log(user);
+    }, [user]);
     return (
         <div>
-            <b>{user.username}</b> <span>({user.email})</span>
+            <b
+                style={{
+                    cursor: "pointer",
+                    color: user.active ? "green" : "black",
+                }}
+                onClick={() => onToggle(user.id)}>
+                {user.username}
+            </b>
+            <span>({user.email})</span>
+            <button onClick={() => onRemove(user.id)}>삭제</button>
         </div>
     );
-}
+});
 
-function UserList() {
-    const users = [
-        {
-            id: 1,
-            username: "velopert",
-            email: "asdas@aafgfadasgsdg.eaf",
-        },
-        {
-            id: 2,
-            username: "tester",
-            email: "sfff@gsdgsjdigsgji.fas",
-        },
-        {
-            id: 3,
-            username: "liz",
-            email: "dsgsd@gdfsjibsabj.vcx",
-        },
-    ];
-
+function UserList({ users, onRemove, onToggle }) {
+    // const timerId = useRef(null);
+    // const increament = () => {
+    //     console.log("increment", new Date());
+    // };
+    // React.useEffect(() => {
+    //     timerId.current = setInterval(increament, 1000);
+    //     return () => {
+    //         if (timerId.current) clearInterval(timerId.current);
+    //     };
+    // }, []);
     return (
         <div>
-            {users.map((user, index) => (
-                <User user={user} key={index} />
+            {users.map((user) => (
+                <User
+                    user={user}
+                    key={user.id}
+                    onRemove={onRemove}
+                    onToggle={onToggle}
+                />
             ))}
         </div>
     );
 }
 
-export default UserList;
+export default React.memo(UserList);
